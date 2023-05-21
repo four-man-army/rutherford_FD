@@ -1,11 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DrawPath : MonoBehaviour
 {
     private GenPath GenPath;
-    private renderInfo renderInfo;
     private GameObject[] oldLines;
 
     public float gap = 0.5f;

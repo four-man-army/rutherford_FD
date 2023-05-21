@@ -1,11 +1,14 @@
 using UnityEngine;
 
+
 public class CameraDrag : MonoBehaviour
 {
-    private float dragSpeed = 500;
+    private float dragSpeed = 1000;
     private Vector3 dragOrigin;
     private Vector3 camOrigin;
 
+    private Vector3 velocity = Vector3.zero;
+    private float smoothTime = 0.3f;
 
     void Start()
     {
@@ -16,51 +19,22 @@ public class CameraDrag : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
+            Cursor.visible = false;
             dragOrigin = Input.mousePosition;
             return;
         }
 
         if (!Input.GetMouseButton(0))
         {
-            transform.position = camOrigin;
+            Cursor.visible = true;
+            transform.position = Vector3.SmoothDamp(transform.position, camOrigin, ref velocity, smoothTime);
             return;
         }
 
         Vector3 pos = Camera.main.ScreenToViewportPoint(Input.mousePosition - dragOrigin);
         Vector3 move = new Vector3(-(pos.x * dragSpeed), -(pos.y * dragSpeed), 0);
 
-        transform.position = move;
+        transform.position = new Vector3(Mathf.Clamp(move.x, -600, 1500), Mathf.Clamp(move.y, -500, 500), 0);
     }
-
 
 }
-
-/*
-public class Drag : MonoBehaviour
-{
-    private bool dragging = false;
-    private Vector3 offset;
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (dragging)
-        {
-            // Move object, taking into account original offset.
-            transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition) + offset;
-        }
-    }
-
-    private void OnMouseDown()
-    {
-        // Record the difference between the objects centre, and the clicked point on the camera plane.
-        offset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        dragging = true;
-    }
-
-    private void OnMouseUp()
-    {
-        // Stop dragging.
-        dragging = false;
-    }
-}*/
